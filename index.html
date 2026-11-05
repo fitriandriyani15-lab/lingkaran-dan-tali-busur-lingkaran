@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lab Maya Lingkaran dan Tali Busur</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F7F8;--card:#fff;--ink:#12303A;--mut:#4F6A73;--line:#C9DADF;--pri:#0E7C86;--acc:#E4572E;--ok:#1C8C4E;--bad:#C0392B;--grid:rgba(14,124,134,.09);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1A1F;--card:#14262D;--ink:#E6F1F3;--mut:#9DB6BD;--line:#2A424B;--pri:#4FC3CE;--acc:#FF8A65;--ok:#4CD08A;--bad:#FF7A6B;--grid:rgba(79,195,206,.08)}}
+:root[data-theme="dark"]{--bg:#0D1A1F;--card:#14262D;--ink:#E6F1F3;--mut:#9DB6BD;--line:#2A424B;--pri:#4FC3CE;--acc:#FF8A65;--ok:#4CD08A;--bad:#FF7A6B;--grid:rgba(79,195,206,.08)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Lexend',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;
+background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+#splash{position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;transition:opacity .6s}
+#splash.out{opacity:0;pointer-events:none}
+#splash svg{width:min(60vw,220px);height:auto}
+#splash .ring{stroke-dasharray:600;stroke-dashoffset:600;animation:draw 1.8s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+#splash h1{font-size:clamp(1.5rem,5vw,2.4rem);font-weight:800;margin:18px 0 4px}
+#splash p{margin:2px 0;color:var(--mut)}
+#splash .dev{margin-top:18px;font-weight:600;color:var(--ink);border-top:2px solid var(--acc);padding-top:10px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:10px 20px;font-weight:600;margin-top:20px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn{color:#06242A}}
+header{padding:14px 16px 0;max-width:980px;margin:auto}
+header h2{margin:0;font-size:clamp(1.1rem,3.5vw,1.5rem)}
+header small{color:var(--mut)}
+nav{display:flex;gap:6px;max-width:980px;margin:12px auto 0;padding:0 16px;flex-wrap:wrap}
+nav button,.seg button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 16px;font-weight:600}
+nav button.on,.seg button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) nav button.on,:root:not([data-theme="light"]) .seg button.on{color:#06242A}}
+main{max-width:980px;margin:14px auto 40px;padding:0 16px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.card h3{margin:0 0 6px;font-size:1.1rem;color:var(--pri)}
+.f{font-family:Georgia,'Times New Roman',serif;font-size:1.08rem;background:var(--bg);border-left:4px solid var(--acc);padding:8px 12px;margin:8px 0;overflow-x:auto;white-space:nowrap}
+ul{padding-left:20px;margin:6px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){.grid2{grid-template-columns:1fr}}
+svg.sim{width:100%;max-width:420px;height:auto;display:block;margin:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.ctl label{display:flex;justify-content:space-between;font-weight:600;margin-top:10px}
+input[type=range]{width:100%;accent-color:var(--pri);height:28px}
+.out{background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:12px;font-size:.95rem}
+.out b{color:var(--acc)}
+.seg{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card))}
+.opt.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--card))}
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:var(--pri);width:0;transition:width .3s}
+.fb{margin-top:10px;font-size:.95rem}
+.big{font-size:3rem;font-weight:800;color:var(--pri);margin:0}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){#splash .ring{animation:none;stroke-dashoffset:0}#splash{transition:none}}
+</style>
+</head>
+<body>
+<div id="splash">
+  <svg viewBox="0 0 200 200" aria-hidden="true">
+    <circle class="ring" cx="100" cy="100" r="90" fill="none" stroke="var(--pri)" stroke-width="4"/>
+    <line x1="30" y1="55" x2="170" y2="55" stroke="var(--acc)" stroke-width="4" stroke-linecap="round"/>
+    <line x1="100" y1="100" x2="100" y2="55" stroke="var(--mut)" stroke-width="2" stroke-dasharray="4 4"/>
+    <circle cx="100" cy="100" r="5" fill="var(--ink)"/>
+  </svg>
+  <h1>Lab Maya Lingkaran dan Tali Busur</h1>
+  <p>Matematika Kelas XI · Fase F</p>
+  <p class="dev">Dikembangkan oleh: Fitri Andriyani</p>
+  <button class="btn" id="start">Mulai belajar</button>
+</div>
+
+<header><h2>Lab Maya: Lingkaran dan Tali Busur</h2><small>Matematika Kelas XI · Fase F</small></header>
+<nav id="nav">
+  <button class="on" data-t="teori">Teori</button>
+  <button data-t="sim">Simulasi</button>
+  <button data-t="latihan">Latihan soal</button>
+</nav>
+<main>
+<section id="teori" class="on">
+  <div class="card"><h3>Tujuan pembelajaran</h3>
+    <ul><li>Menyebutkan unsur-unsur lingkaran, termasuk tali busur dan apotema.</li>
+    <li>Menghitung panjang tali busur dari jari-jari dan jarak ke pusat.</li>
+    <li>Menggunakan sifat perpotongan dua tali busur untuk menyelesaikan soal.</li></ul></div>
+  <div class="card"><h3>1. Unsur-unsur lingkaran</h3>
+    <p>Lingkaran adalah himpunan semua titik yang berjarak sama terhadap satu titik tertentu (pusat).</p>
+    <ul><li><b>Jari-jari (r)</b>: ruas garis dari pusat ke titik pada lingkaran.</li>
+    <li><b>Diameter (d = 2r)</b>: tali busur yang melalui pusat; ini tali busur terpanjang.</li>
+    <li><b>Tali busur</b>: ruas garis yang menghubungkan dua titik pada lingkaran.</li>
+    <li><b>Apotema</b>: jarak tegak lurus dari pusat ke tali busur.</li>
+    <li><b>Busur, juring, tembereng</b>: bagian kurva, bagian daerah berbentuk “irisan pizza”, dan daerah antara tali busur dan busur.</li></ul>
+    <p>Persamaan lingkaran:</p>
+    <div class="f">Pusat O(0, 0): x² + y² = r²</div>
+    <div class="f">Pusat P(a, b): (x − a)² + (y − b)² = r²</div></div>
+  <div class="card"><h3>2. Sifat tali busur</h3>
+    <ul><li>Apotema yang ditarik dari pusat tegak lurus tali busur dan <b>membagi tali busur menjadi dua sama panjang</b>.</li>
+    <li>Tali busur yang sama panjang memiliki jarak yang sama ke pusat (dan sebaliknya).</li>
+    <li>Makin dekat ke pusat, makin panjang tali busurnya.</li></ul>
+    <p>Dari segitiga siku-siku O–M–A (M titik tengah tali busur, OA = r, OM = d):</p>
+    <div class="f">AB = 2 √(r² − d²)</div>
+    <p>Jika sudut pusat yang menghadap tali busur adalah θ:</p>
+    <div class="f">AB = 2r sin(θ/2) &nbsp; dengan &nbsp; cos(θ/2) = d / r</div></div>
+  <div class="card"><h3>3. Perpotongan dua tali busur</h3>
+    <p>Jika tali busur AB dan CD berpotongan di titik P di dalam lingkaran, maka hasil kali panjang potongannya sama:</p>
+    <div class="f">AP × PB = CP × PD</div>
+    <p><b>Contoh:</b> AP = 4, PB = 9, CP = 3. Maka PD = (4 × 9) ÷ 3 = 12.</p></div>
+  <div class="card"><h3>4. Tali busur pada persamaan lingkaran</h3>
+    <p><b>Contoh:</b> Garis y = 3 memotong x² + y² = 25. Substitusi: x² = 25 − 9 = 16, sehingga x = ±4. Titik potongnya (−4, 3) dan (4, 3), sehingga panjang tali busur = 8.</p>
+    <button class="btn" onclick="go('sim')">Coba di simulasi</button></div>
+  <div class="card"><h3>5. Segi empat tali busur</h3>
+    <p>Segi empat tali busur (segi empat siklik) adalah segi empat yang keempat titik sudutnya terletak pada satu lingkaran. Keempat sisinya merupakan tali busur lingkaran tersebut.</p>
+    <ul><li><b>Sudut yang berhadapan berjumlah 180°.</b></li>
+    <li>Sudut luar sama besar dengan sudut dalam yang berhadapan dengannya.</li>
+    <li>Besar sudut keliling = ½ × busur di hadapannya, sehingga ∠A = ½ × busur BCD.</li>
+    <li>Persegi, persegi panjang, dan trapesium sama kaki selalu merupakan segi empat tali busur.</li></ul>
+    <div class="f">∠A + ∠C = 180° &nbsp; dan &nbsp; ∠B + ∠D = 180°</div>
+    <p><b>Teorema Ptolemeus</b>: hasil kali diagonal sama dengan jumlah hasil kali sisi-sisi berhadapan.</p>
+    <div class="f">AC × BD = AB × CD + BC × AD</div>
+    <p><b>Luas</b> (rumus Brahmagupta), dengan s = ½ × keliling dan sisi a, b, c, d:</p>
+    <div class="f">L = √[(s − a)(s − b)(s − c)(s − d)]</div>
+    <p><b>Contoh 1:</b> ABCD segi empat tali busur, ∠A = 75° dan ∠B = 100°. Maka ∠C = 180° − 75° = 105° dan ∠D = 180° − 100° = 80°.</p>
+    <p><b>Contoh 2:</b> Persegi panjang 6 × 8 punya diagonal 10. Cek Ptolemeus: 10 × 10 = 6 × 6 + 8 × 8 = 100. Terbukti.</p>
+    <button class="btn" onclick="go('sim')">Coba di simulasi</button></div>
+</section>
+
+<section id="sim">
+  <div class="seg"><button class="on" data-s="s1">Panjang tali busur</button><button data-s="s2">Dua tali busur berpotongan</button><button data-s="s3">Segi empat tali busur</button></div>
+  <div id="s1" class="grid2">
+    <svg class="sim" viewBox="0 0 300 300" id="svg1" role="img" aria-label="Lingkaran dengan tali busur"></svg>
+    <div class="card ctl"><h3>Atur lingkaran</h3>
+      <label>Jari-jari r <span id="v_r"></span></label><input type="range" id="r" min="3" max="12" step="0.5" value="10">
+      <label>Jarak ke pusat (apotema) d <span id="v_d"></span></label><input type="range" id="d" min="0" max="10" step="0.5" value="6">
+      <div class="out" id="o1"></div>
+      <p class="fb">Tugas: geser d ke 0. Apa yang terjadi pada tali busur? Lalu geser d mendekati r.</p></div>
+  </div>
+  <div id="s2" class="grid2" style="display:none">
+    <svg class="sim" viewBox="0 0 300 300" id="svg2" role="img" aria-label="Dua tali busur berpotongan"></svg>
+    <div class="card ctl"><h3>Atur titik pada lingkaran</h3>
+      <label>Titik A (sudut) <span id="v_a"></span></label><input type="range" id="a" min="0" max="359" value="20">
+      <label>Titik B (sudut) <span id="v_b"></span></label><input type="range" id="b" min="0" max="359" value="200">
+      <label>Titik C (sudut) <span id="v_c"></span></label><input type="range" id="c" min="0" max="359" value="100">
+      <label>Titik D (sudut) <span id="v_e"></span></label><input type="range" id="e" min="0" max="359" value="300">
+      <div class="out" id="o2"></div></div>
+  </div>
+  <div id="s3" class="grid2" style="display:none">
+    <svg class="sim" viewBox="0 0 300 300" id="svg3" role="img" aria-label="Segi empat tali busur"></svg>
+    <div class="card ctl"><h3>Atur titik sudut</h3>
+      <label>Titik 1 <span id="v_p1"></span></label><input type="range" id="p1" min="0" max="359" value="30">
+      <label>Titik 2 <span id="v_p2"></span></label><input type="range" id="p2" min="0" max="359" value="110">
+      <label>Titik 3 <span id="v_p3"></span></label><input type="range" id="p3" min="0" max="359" value="200">
+      <label>Titik 4 <span id="v_p4"></span></label><input type="range" id="p4" min="0" max="359" value="290">
+      <div class="out" id="o3"></div>
+      <p class="fb">Tugas: geser titik sesukamu. Apakah jumlah sudut berhadapan selalu 180°?</p></div>
+  </div>
+</section>
+
+<section id="latihan"><div class="card" id="quiz"></div></section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const f2=x=>(Math.round(x*100)/100).toString().replace('.',',');
+$('start').onclick=()=>$('splash').classList.add('out');
+function go(t){document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===t));
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));scrollTo(0,0)}
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b));
+ ['s1','s2','s3'].forEach(k=>$(k).style.display=b.dataset.s===k?'grid':'none')});
+
+/* Simulasi 1 */
+function sim1(){
+ const r=+$('r').value;$('d').max=r;let d=Math.min(+$('d').value,r);$('d').value=d;
+ $('v_r').textContent=f2(r);$('v_d').textContent=f2(d);
+ const s=13,cx=150,cy=150,h=Math.sqrt(r*r-d*d),y=cy-d*s,x1=cx-h*s,x2=cx+h*s;
+ const th=2*Math.acos(d/r)*180/Math.PI;
+ $('svg1').innerHTML=`<circle cx="${cx}" cy="${cy}" r="${r*s}" fill="none" stroke="var(--pri)" stroke-width="3"/>
+ <line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="var(--acc)" stroke-width="4" stroke-linecap="round"/>
+ <line x1="${cx}" y1="${cy}" x2="${cx}" y2="${y}" stroke="var(--ink)" stroke-dasharray="4 4"/>
+ <line x1="${cx}" y1="${cy}" x2="${x1}" y2="${y}" stroke="var(--mut)"/><line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y}" stroke="var(--mut)"/>
+ <g fill="var(--ink)" font-size="13" font-weight="600"><circle cx="${cx}" cy="${cy}" r="4"/><text x="${cx+7}" y="${cy+16}">O</text>
+ <circle cx="${x1}" cy="${y}" r="4" fill="var(--acc)"/><text x="${x1-14}" y="${y-8}">A</text>
+ <circle cx="${x2}" cy="${y}" r="4" fill="var(--acc)"/><text x="${x2+6}" y="${y-8}">B</text>
+ <text x="${cx+5}" y="${y+16}">M</text></g>`;
+ $('o1').innerHTML=`Panjang AB = 2√(${f2(r)}² − ${f2(d)}²) = <b>${f2(2*h)}</b><br>Sudut pusat θ = <b>${f2(th)}°</b><br>Cek: 2r sin(θ/2) = ${f2(2*r*Math.sin(th*Math.PI/360))}<br>Diameter = ${f2(2*r)} ${d===0?'(tali busur menjadi diameter)':''}`}
+$('r').oninput=sim1;$('d').oninput=sim1;sim1();
+
+/* Simulasi 2 */
+function sim2(){
+ const R=120,cx=150,cy=150,g=k=>+$(k).value,rad=k=>g(k)*Math.PI/180;
+ const pt=k=>[cx+R*Math.cos(rad(k)),cy-R*Math.sin(rad(k))];
+ ['a','b','c','e'].forEach(k=>$('v_'+k).textContent=g(k)+'°');
+ const A=pt('a'),B=pt('b'),C=pt('c'),D=pt('e');
+ const den=(A[0]-B[0])*(C[1]-D[1])-(A[1]-B[1])*(C[0]-D[0]);
+ let P=null,msg='';
+ if(Math.abs(den)>1e-6){
+  const t=((A[0]-C[0])*(C[1]-D[1])-(A[1]-C[1])*(C[0]-D[0]))/den,u=-((A[0]-B[0])*(A[1]-C[1])-(A[1]-B[1])*(A[0]-C[0]))/den;
+  if(t>0&&t<1&&u>0&&u<1)P=[A[0]+t*(B[0]-A[0]),A[1]+t*(B[1]-A[1])]}
+ const L=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1])/R*5; // R = 5 satuan
+ let svg=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--pri)" stroke-width="3"/>
+ <line x1="${A[0]}" y1="${A[1]}" x2="${B[0]}" y2="${B[1]}" stroke="var(--acc)" stroke-width="3"/>
+ <line x1="${C[0]}" y1="${C[1]}" x2="${D[0]}" y2="${D[1]}" stroke="var(--ink)" stroke-width="3"/><g font-size="14" font-weight="600" fill="var(--ink)">`;
+ [['A',A],['B',B],['C',C],['D',D]].forEach(([n,p])=>{svg+=`<circle cx="${p[0]}" cy="${p[1]}" r="4"/><text x="${p[0]+(p[0]>cx?7:-16)}" y="${p[1]+(p[1]>cy?16:-6)}">${n}</text>`});
+ if(P)svg+=`<circle cx="${P[0]}" cy="${P[1]}" r="5" fill="var(--acc)"/><text x="${P[0]+7}" y="${P[1]-7}">P</text>`;
+ $('svg2').innerHTML=svg+'</g>';
+ $('o2').innerHTML=P?`(jari-jari = 5 satuan)<br>AP = ${f2(L(A,P))}, PB = ${f2(L(P,B))}<br>CP = ${f2(L(C,P))}, PD = ${f2(L(P,D))}<br>AP × PB = <b>${f2(L(A,P)*L(P,B))}</b><br>CP × PD = <b>${f2(L(C,P)*L(P,D))}</b><br>Hasilnya sama. Sifat terbukti.`:'Tali busur belum berpotongan di dalam lingkaran. Atur titik agar urutannya berselang-seling di keliling lingkaran: A, C, B, D.'}
+['a','b','c','e'].forEach(k=>$(k).oninput=sim2);sim2();
+
+/* Simulasi 3 */
+function sim3(){
+ const R=120,cx=150,cy=150,K=['p1','p2','p3','p4'],nm='ABCD';
+ K.forEach(k=>$('v_'+k).textContent=$(k).value+'°');
+ const t=K.map(k=>+$(k).value).sort((x,y)=>x-y);
+ const P=t.map(a=>[cx+R*Math.cos(a*Math.PI/180),cy-R*Math.sin(a*Math.PI/180)]);
+ const ang=[(t[3]-t[1])/2,(t[0]+360-t[2])/2,(t[1]+360-t[3])/2,(t[2]-t[0])/2];
+ const L=(i,j)=>Math.hypot(P[i][0]-P[j][0],P[i][1]-P[j][1])/R*5;
+ let s=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--pri)" stroke-width="3"/>
+ <polygon points="${P.map(p=>p.join(',')).join(' ')}" fill="var(--acc)" fill-opacity=".12" stroke="var(--acc)" stroke-width="3" stroke-linejoin="round"/>
+ <line x1="${P[0][0]}" y1="${P[0][1]}" x2="${P[2][0]}" y2="${P[2][1]}" stroke="var(--mut)" stroke-dasharray="5 4"/>
+ <line x1="${P[1][0]}" y1="${P[1][1]}" x2="${P[3][0]}" y2="${P[3][1]}" stroke="var(--mut)" stroke-dasharray="5 4"/><g font-size="14" font-weight="600" fill="var(--ink)">`;
+ P.forEach((p,i)=>{const dx=p[0]-cx,dy=p[1]-cy,m=Math.hypot(dx,dy)||1;
+  s+=`<circle cx="${p[0]}" cy="${p[1]}" r="4"/><text x="${p[0]+dx/m*16-5}" y="${p[1]+dy/m*16+5}">${nm[i]}</text>`});
+ $('svg3').innerHTML=s+'</g>';
+ const q=x=>f2(x);
+ $('o3').innerHTML=`∠A = ${q(ang[0])}°, ∠B = ${q(ang[1])}°<br>∠C = ${q(ang[2])}°, ∠D = ${q(ang[3])}°<br>∠A + ∠C = <b>${q(ang[0]+ang[2])}°</b><br>∠B + ∠D = <b>${q(ang[1]+ang[3])}°</b><hr style="border:0;border-top:1px solid var(--line)">(jari-jari = 5 satuan)<br>AC × BD = <b>${q(L(0,2)*L(1,3))}</b><br>AB × CD + BC × AD = <b>${q(L(0,1)*L(2,3)+L(1,2)*L(0,3))}</b><br>Hasilnya sama (Ptolemeus).`}
+['p1','p2','p3','p4'].forEach(k=>$(k).oninput=sim3);sim3();
+
+/* Latihan */
+const Q=[
+ ["Sebuah lingkaran berjari-jari 17 cm. Tali busurnya berjarak 8 cm dari pusat. Panjang tali busur tersebut adalah …",["15 cm","30 cm","25 cm","34 cm"],1,"AB = 2√(17² − 8²) = 2√225 = 2 × 15 = 30 cm."],
+ ["Tali busur sepanjang 16 cm terdapat pada lingkaran berjari-jari 10 cm. Jarak tali busur ke pusat adalah …",["4 cm","6 cm","8 cm","12 cm"],1,"Setengah tali busur = 8. d = √(10² − 8²) = √36 = 6 cm."],
+ ["Tali busur 24 cm berjarak 5 cm dari pusat lingkaran. Jari-jari lingkaran adalah …",["12 cm","13 cm","15 cm","17 cm"],1,"r = √(12² + 5²) = √169 = 13 cm."],
+ ["Tali busur AB dan CD berpotongan di P. Diketahui AP = 4, PB = 9, CP = 3. Panjang PD adalah …",["6","8","12","13"],2,"AP × PB = CP × PD → 36 = 3 × PD → PD = 12."],
+ ["Sudut pusat yang menghadap tali busur adalah 60° pada lingkaran berjari-jari 8 cm. Panjang tali busur adalah …",["4 cm","8 cm","8√3 cm","16 cm"],1,"AB = 2 × 8 × sin 30° = 2 × 8 × ½ = 8 cm."],
+ ["Tali busur terpanjang pada sebuah lingkaran adalah …",["Apotema","Jari-jari","Diameter","Juring"],2,"Diameter melalui pusat (d = 0), sehingga panjangnya maksimum, yaitu 2r."],
+ ["Garis x = 3 memotong lingkaran x² + y² = 25. Panjang tali busur yang terbentuk adalah …",["4","6","8","10"],2,"y² = 25 − 9 = 16, y = ±4. Panjang tali busur = 4 − (−4) = 8."],
+ ["Garis y = 1 memotong lingkaran (x − 2)² + (y + 1)² = 29. Panjang tali busurnya adalah …",["5","10","2√29","8"],1,"(x − 2)² + 4 = 29 → x − 2 = ±5. Titik x = 7 dan x = −3, sehingga panjangnya 10."],
+ ["Jika dua tali busur dalam satu lingkaran sama panjang, maka …",["Keduanya sejajar","Keduanya berpotongan di pusat","Jaraknya ke pusat sama","Keduanya adalah diameter"],2,"Tali busur yang sama panjang memiliki apotema yang sama panjang."],
+ ["Pada lingkaran berjari-jari 15 cm terdapat dua tali busur sejajar, AB = 24 cm dan CD = 18 cm, berada di sisi berlawanan dari pusat. Jarak kedua tali busur adalah …",["3 cm","15 cm","21 cm","25 cm"],2,"d₁ = √(15² − 12²) = 9; d₂ = √(15² − 9²) = 12. Jarak = 9 + 12 = 21 cm."]
+];
+let qi=0,sc=0;
+function show(){
+ const q=$('quiz');
+ if(qi>=Q.length){const p=sc*10;
+  q.innerHTML=`<h3>Hasil latihan</h3><p class="big">${p}</p><p>Kamu menjawab benar ${sc} dari ${Q.length} soal. ${p>=80?'Hebat! Pemahamanmu sudah kuat.':p>=60?'Cukup baik. Ulangi simulasi untuk soal yang masih salah.':'Pelajari kembali teori dan simulasi, lalu coba lagi.'}</p><button class="btn" id="re">Ulangi latihan</button>`;
+  $('re').onclick=()=>{qi=0;sc=0;show()};return}
+ const [t,o,a,ex]=Q[qi];
+ q.innerHTML=`<div class="bar"><i style="width:${qi/Q.length*100}%"></i></div><h3>Soal ${qi+1} dari ${Q.length}</h3><p>${t}</p>`+
+  o.map((x,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}. ${x}</button>`).join('')+`<div class="fb" id="fb"></div>`;
+ q.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+  const i=+b.dataset.i;q.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===a)x.classList.add('ok')});
+  if(i===a){sc++}else b.classList.add('no');
+  $('fb').innerHTML=`<b>${i===a?'Benar!':'Belum tepat.'}</b> ${ex}<br><button class="btn" id="nx">${qi===Q.length-1?'Lihat hasil':'Soal berikutnya'}</button>`;
+  $('nx').onclick=()=>{qi++;show();scrollTo(0,0)}})}
+show();
+</script>
+</body>
+</html>
